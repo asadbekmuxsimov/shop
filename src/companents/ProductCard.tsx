@@ -4,7 +4,7 @@ import savat from "../assets/icons/shop.svg";
 import Link from "next/link";
 import { CardsDataType } from "@/type/Types";
 
-function ProductCard({ item }: { item?: CardsDataType }) {
+function ProductCard({ item, addToCart }: { item?: CardsDataType, addToCart: (item: CardsDataType) => void }) {
   if (!item) {
     return (
       <div className="text-red-500">Mahsulot ma'lumotlari mavjud emas.</div>
@@ -13,8 +13,8 @@ function ProductCard({ item }: { item?: CardsDataType }) {
 
   return (
     <div className="bg-white mt-12 shadow-md rounded-lg p-4 max-w-[250px] mb-5 flex flex-col justify-between">
-        <Link href={`/pradakt/${item.id}`}>
-      <div>
+      <Link href={`/pradakt/${item.id}`}>
+        <div>
           {item.imageUrl ? (
             <Image
               width={230}
@@ -28,23 +28,25 @@ function ProductCard({ item }: { item?: CardsDataType }) {
               <p className="text-gray-500">Rasm yo‘q</p>
             </div>
           )}
-        <p className="text-gray-700 text-sm line-clamp-2">
-          {item.description || "Tavsif mavjud emas"}
-        </p>
-      </div>
-        </Link>
+          <p className="text-gray-700 text-sm line-clamp-2">
+            {item.description || "Tavsif mavjud emas"}
+          </p>
+        </div>
+      </Link>
       <div className="mt-4">
         <div className="flex justify-between items-center mt-3">
           <p className="text-lg font-semibold text-gray-900">
             {item.price ? `$${item.price}` : "Narx noma’lum"}
           </p>
-          <button className="border-2 border-blue-400 p-2 rounded-md hover:bg-blue-100 cursor-pointer">
+          <button
+            onClick={() => addToCart(item)}
+            className="border-2 border-blue-400 p-2 rounded-md hover:bg-blue-100 cursor-pointer"
+          >
             <Image width={30} height={30} src={savat} alt="savat" />
           </button>
         </div>
       </div>
-        </div>
-
+    </div>
   );
 }
 

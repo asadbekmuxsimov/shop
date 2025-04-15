@@ -1,7 +1,7 @@
 "use client";
 import ProductCard from "@/companents/ProductCard";
 import Loading from "@/pages/_companents/Loading";
-import { CategoriesProductIdTYpe } from "@/type/Types";
+import { CardsDataType, CategoriesProductIdTYpe } from "@/type/Types";
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -38,7 +38,9 @@ function NavbarPage() {
         <div className="container mx-auto px-4 md:px-10 lg:px-32 mt-3">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 {categoriaId.items.map((item) => (
-                    <ProductCard item={item} key={item.id} />
+                    <ProductCard item={item} key={item.id} addToCart={function (item: CardsDataType): void {
+                        throw new Error("Function not implemented.");
+                    } } />
                 ))}
             </div>
         </div>

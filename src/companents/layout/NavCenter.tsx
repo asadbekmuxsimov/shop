@@ -9,9 +9,21 @@ import user from "../../assets/icons/user.svg";
 import yurak from "../../assets/icons/yurak.svg";
 import shop from "../../assets/icons/shop.svg";
 import KatalogMadal from "./KatalogMadal";
+import ProductCard from "../ProductCard";
+import { CardsDataType } from "@/type/Types";
 
 function NavCenter() {
   const [katalog, setKatalog] = useState(false);
+  const [cart, setCart] = useState<CardsDataType[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const addToCart = (item: CardsDataType) => {
+    setCart((prevCart) => [...prevCart, item]);
+  };
+
+  const removeFromCart = (id: number) => {
+    setCart(cart.filter((item) => item.id !== id));
+  };
 
   return (
     <div className="w-full bg-white shadow-sm sticky top-0 z-50">
@@ -41,23 +53,56 @@ function NavCenter() {
         </div>
 
         <div className="flex gap-6">
-          {[
-            { icon: user, label: "Kirish" },
-            { icon: yurak, label: "Sevimlilar" },
-            { icon: shop, label: "Savatcha" },
-          ].map((item, i) => (
-            <div
-              key={i}
-              className="flex flex-col items-center text-sm text-gray-700 hover:text-blue-700 transition cursor-pointer"
-            >
+          {[{ icon: user, label: "Kirish" }, { icon: yurak, label: "Sevimlilar" }].map((item, i) => (
+            <div key={i} className="flex flex-col items-center text-sm text-gray-700 hover:text-blue-700 transition cursor-pointer">
               <Image src={item.icon} alt={item.label} width={28} height={28} />
               <p>{item.label}</p>
             </div>
           ))}
+          <div
+            className="flex flex-col items-center text-sm text-gray-700 cursor-pointer"
+            onClick={() => setIsModalOpen(true)}
+          >
+            <Image src={shop} alt="Savatcha" width={28} height={28} />
+            <p>Savatcha ({cart.length})</p>
+          </div>
         </div>
       </div>
 
       <KatalogMadal katalog={katalog} setKatalog={setKatalog} />
+
+      {isModalOpen && (
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg w-96">
+            <h2 className="text-lg font-bold mb-4">Savatcha</h2>
+            <div className="space-y-4">
+              {cart.length === 0 ? (
+                <p>Savatchada hech narsa yo'q.</p>
+              ) : (
+                cart.map((item) => (
+                  <div key={item.id} className="flex justify-between items-center">
+                    <p>{item.name}</p>
+                    <button
+                      onClick={() => removeFromCart(item.id)}
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      X
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="bg-blue-600 text-white px-4 py-2 rounded-md"
+              >
+                Yopish
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
